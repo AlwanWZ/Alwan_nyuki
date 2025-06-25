@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectMongo from '@/lib/mongodb';
 import User from '@/models/user';
 
+// Helper untuk memastikan hasil query adalah objek user tunggal
+function getUserFields(user: any) {
+  if (!user || Array.isArray(user)) return null;
+  const { _id, uid, name, email, role, photoURL, noTelp, alamat, tanggalLahir, tanggalBergabung, noKTP, pekerjaan, darurat, bio, status } = user;
+  return { _id, uid, name, email, role, photoURL, noTelp, alamat, tanggalLahir, tanggalBergabung, noKTP, pekerjaan, darurat, bio, status };
+}
+
 // GET user by UID (prioritas cari pakai uid, bukan _id)
 export async function GET(request: NextRequest, context: any) {
   const id = context?.params?.id;
@@ -16,10 +23,11 @@ export async function GET(request: NextRequest, context: any) {
         user = await User.findById(id).lean();
       }
     }
-    if (!user) {
+    const userFields = getUserFields(user);
+    if (!userFields) {
       return NextResponse.json({ error: 'User tidak ditemukan' }, { status: 404 });
     }
-    return NextResponse.json({ data: user });
+    return NextResponse.json({ data: userFields });
   } catch (error) {
     return NextResponse.json({ error: 'Gagal mengambil data user' }, { status: 500 });
   }
@@ -40,10 +48,11 @@ export async function PATCH(request: NextRequest, context: any) {
         updated = await User.findByIdAndUpdate(id, { $set: body }, { new: true });
       }
     }
-    if (!updated) {
+    const userFields = getUserFields(updated);
+    if (!userFields) {
       return NextResponse.json({ error: 'User tidak ditemukan' }, { status: 404 });
     }
-    return NextResponse.json({ data: updated });
+    return NextResponse.json({ data: userFields });
   } catch (error) {
     return NextResponse.json({ error: 'Gagal update user' }, { status: 500 });
   }
@@ -63,10 +72,11 @@ export async function DELETE(request: NextRequest, context: any) {
         deleted = await User.findByIdAndDelete(id);
       }
     }
-    if (!deleted) {
+    const userFields = getUserFields(deleted);
+    if (!userFields) {
       return NextResponse.json({ error: 'User tidak ditemukan' }, { status: 404 });
     }
-    return NextResponse.json({ data: deleted });
+    return NextResponse.json({ data: userFields });
   } catch (error) {
     return NextResponse.json({ error: 'Gagal menghapus user' }, { status: 500 });
   }
