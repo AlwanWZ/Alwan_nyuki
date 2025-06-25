@@ -7,11 +7,14 @@ export async function GET(request: NextRequest, context: any) {
   const id = context?.params?.id;
   try {
     await connectMongo();
-    // Selalu cari berdasarkan uid terlebih dahulu (karena sistem relasi pakai uid)
-    let user = await User.findOne({ uid: id }).lean();
-    // Jika tidak ketemu dan id format 24 hex karakter, coba cari by _id (opsional, fallback)
-    if (!user && id && id.length === 24 && /^[a-fA-F0-9]+$/.test(id)) {
-      user = await User.findById(id).lean();
+    let user = null;
+    if (id) {
+      // Cari berdasarkan uid
+      user = await User.findOne({ uid: id }).lean();
+      // Jika tidak ketemu dan id format 24 hex karakter, coba cari by _id
+      if (!user && id.length === 24 && /^[a-fA-F0-9]+$/.test(id)) {
+        user = await User.findById(id).lean();
+      }
     }
     if (!user) {
       return NextResponse.json({ error: 'User tidak ditemukan' }, { status: 404 });
@@ -28,11 +31,14 @@ export async function PATCH(request: NextRequest, context: any) {
   try {
     await connectMongo();
     const body = await request.json();
-    // Selalu update berdasarkan uid terlebih dahulu
-    let updated = await User.findOneAndUpdate({ uid: id }, { $set: body }, { new: true });
-    // Jika tidak ketemu dan id format 24 hex karakter, coba update by _id (opsional, fallback)
-    if (!updated && id && id.length === 24 && /^[a-fA-F0-9]+$/.test(id)) {
-      updated = await User.findByIdAndUpdate(id, { $set: body }, { new: true });
+    let updated = null;
+    if (id) {
+      // Update berdasarkan uid
+      updated = await User.findOneAndUpdate({ uid: id }, { $set: body }, { new: true });
+      // Jika tidak ketemu dan id format 24 hex karakter, coba update by _id
+      if (!updated && id.length === 24 && /^[a-fA-F0-9]+$/.test(id)) {
+        updated = await User.findByIdAndUpdate(id, { $set: body }, { new: true });
+      }
     }
     if (!updated) {
       return NextResponse.json({ error: 'User tidak ditemukan' }, { status: 404 });
@@ -48,11 +54,14 @@ export async function DELETE(request: NextRequest, context: any) {
   const id = context?.params?.id;
   try {
     await connectMongo();
-    // Hapus berdasarkan uid terlebih dahulu
-    let deleted = await User.findOneAndDelete({ uid: id });
-    // Jika tidak ketemu dan id format 24 hex karakter, coba hapus by _id (opsional, fallback)
-    if (!deleted && id && id.length === 24 && /^[a-fA-F0-9]+$/.test(id)) {
-      deleted = await User.findByIdAndDelete(id);
+    let deleted = null;
+    if (id) {
+      // Hapus berdasarkan uid
+      deleted = await User.findOneAndDelete({ uid: id });
+      // Jika tidak ketemu dan id format 24 hex karakter, coba hapus by _id
+      if (!deleted && id.length === 24 && /^[a-fA-F0-9]+$/.test(id)) {
+        deleted = await User.findByIdAndDelete(id);
+      }
     }
     if (!deleted) {
       return NextResponse.json({ error: 'User tidak ditemukan' }, { status: 404 });
