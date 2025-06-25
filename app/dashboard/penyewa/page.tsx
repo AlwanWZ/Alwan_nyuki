@@ -53,29 +53,29 @@ const PenyewaDashboard = () => {
   const [pembayaran, setPembayaran] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const userStr = localStorage.getItem("user");
-  if (!userStr) return;
-  const localUser = JSON.parse(userStr);
-  setUser(localUser);
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (!userStr) return;
+    const localUser = JSON.parse(userStr);
+    setUser(localUser);
 
-  // Ambil data kontrakan berdasarkan nama kontrakan di user
-  fetch("/api/kontrakan")
-    .then(res => res.json())
-    .then(data => {
-      // Cari kontrakan berdasarkan nama (bukan penyewaId)
-      const kontrakanUser = (data.data || []).find(
-        (k: any) => k.nama === localUser.kontrakan
-      );
-      setKontrakan(kontrakanUser);
+    // Ambil data kontrakan berdasarkan nama kontrakan di user
+    fetch("/api/kontrakan")
+      .then(res => res.json())
+      .then(data => {
+        // Cari kontrakan berdasarkan nama (bukan penyewaId)
+        const kontrakanUser = (data.data || []).find(
+          (k: any) => k.nama === localUser.kontrakan
+        );
+        setKontrakan(kontrakanUser);
 
-      // Ambil pembayaran berdasarkan userId
-      fetch(`/api/pembayaran-penyewa?userId=${localUser.uid}`)
-        .then(res => res.json())
-        .then(data => setPembayaran(data.data || []))
-        .finally(() => setLoading(false));
-    });
-}, []);
+        // Ambil pembayaran berdasarkan userId
+        fetch(`/api/pembayaran-penyewa?userId=${localUser.uid}`)
+          .then(res => res.json())
+          .then(data => setPembayaran(data.data || []))
+          .finally(() => setLoading(false));
+      });
+  }, []);
 
   // Data fallback jika belum ada
   const namaKontrakan = kontrakan?.nama || "-";
