@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import React, { useEffect, useState } from "react";
 import { PenyewaNavbar } from "./navbar";
@@ -217,7 +218,7 @@ useEffect(() => {
                         <StatusBadge status={item.status === "sukses" ? "Lunas" : "Belum Dibayar"} />
                       </div>
                     ))
-                  )}
+                  }
                 </div>
                 <button className="w-full px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-lg font-medium shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2">
                   <CreditCard className="h-4 w-4" />

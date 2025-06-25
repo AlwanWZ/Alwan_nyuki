@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { Bell, Info, CheckCircle, AlertTriangle, X } from "lucide-react";
 import { useEffect, useState } from "react";

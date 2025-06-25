@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
 import {
@@ -54,17 +55,17 @@ export default function ProfilTamuPage() {
   const [saving, setSaving] = useState(false);
 
   // Proteksi login
-useEffect(() => {
-  const userStr = localStorage.getItem("user");
-  if (!userStr) {
-    window.location.href = "/login";
-    return;
-  }
-  const localUser = JSON.parse(userStr);
-  if (localUser.role !== "tamu") {
-    window.location.href = `/dashboard/${localUser.role}`;
-    return;
-  }
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (!userStr) {
+      window.location.href = "/login";
+      return;
+    }
+    const localUser = JSON.parse(userStr);
+    if (localUser.role !== "tamu") {
+      window.location.href = `/dashboard/${localUser.role}`;
+      return;
+    }
 
     // Fetch data user dari MongoDB
     const fetchUser = async () => {

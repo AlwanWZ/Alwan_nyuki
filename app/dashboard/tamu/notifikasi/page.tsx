@@ -1,4 +1,6 @@
 "use client";
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState } from "react";
 import { Info, CheckCircle, AlertTriangle, X } from "lucide-react";
 import { TamuNavbar } from "../../tamu/navbar";
@@ -16,17 +18,17 @@ export default function NotifikasiTamu() {
   }, []);
 
   // Handler untuk menghapus notifikasi
-const handleDelete = async (id: string) => {
-  if (!id) return;
-  if (!confirm("Hapus notifikasi ini?")) return;
-  const res = await fetch(`/api/notifications/${id}`, { method: "DELETE" });
-  if (res.ok) {
-    setNotifikasi((prev) => prev.filter((n) => n._id !== id));
-  } else {
-    const error = await res.json();
-    alert("Gagal menghapus notifikasi. " + (error?.error || ''));
-  }
-};
+  const handleDelete = async (id: string) => {
+    if (!id) return;
+    if (!confirm("Hapus notifikasi ini?")) return;
+    const res = await fetch(`/api/notifications/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      setNotifikasi((prev) => prev.filter((n) => n._id !== id));
+    } else {
+      const error = await res.json();
+      alert("Gagal menghapus notifikasi. " + (error?.error || ""));
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-slate-900 to-zinc-900 text-white">
@@ -55,13 +57,21 @@ const handleDelete = async (id: string) => {
                 <X className="w-5 h-5" />
               </button>
               <div className="pt-1">
-                {n.type === "info" && <Info className="w-6 h-6 text-blue-400" />}
-                {n.type === "success" && <CheckCircle className="w-6 h-6 text-emerald-400" />}
-                {n.type === "warning" && <AlertTriangle className="w-6 h-6 text-yellow-400" />}
+                {n.type === "info" && (
+                  <Info className="w-6 h-6 text-blue-400" />
+                )}
+                {n.type === "success" && (
+                  <CheckCircle className="w-6 h-6 text-emerald-400" />
+                )}
+                {n.type === "warning" && (
+                  <AlertTriangle className="w-6 h-6 text-yellow-400" />
+                )}
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-lg text-white">{n.title}</span>
+                  <span className="font-semibold text-lg text-white">
+                    {n.title}
+                  </span>
                   {!n.read && (
                     <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-emerald-500/20 text-emerald-300 font-bold">
                       Baru
@@ -69,7 +79,9 @@ const handleDelete = async (id: string) => {
                   )}
                 </div>
                 <div className="text-slate-300 mt-1">{n.message}</div>
-                <div className="text-xs text-slate-400 mt-2">{new Date(n.time).toLocaleString("id-ID")}</div>
+                <div className="text-xs text-slate-400 mt-2">
+                  {new Date(n.time).toLocaleString("id-ID")}
+                </div>
               </div>
             </div>
           ))}
