@@ -4,14 +4,14 @@ import DaftarPengajuan from "@/models/daftar_pengajuan";
 import { ObjectId } from "mongodb";
 
 // PATCH pengajuan (update status/alasan)
-export async function PATCH(req: NextRequest, context: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, context: any) {
+  await connectMongo();
+  const id = context?.params?.id;
+  if (!id || !ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "ID pengajuan tidak valid" }, { status: 400 });
+  }
   try {
-    await connectMongo();
-    const { id } = context.params;
-    if (!ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "ID pengajuan tidak valid" }, { status: 400 });
-    }
-    const body = await req.json();
+    const body = await request.json();
     const updated = await DaftarPengajuan.findByIdAndUpdate(id, { $set: body }, { new: true });
     if (!updated) {
       return NextResponse.json({ error: "Pengajuan tidak ditemukan" }, { status: 404 });
@@ -23,13 +23,13 @@ export async function PATCH(req: NextRequest, context: { params: { id: string } 
 }
 
 // DELETE pengajuan
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: any) {
+  await connectMongo();
+  const id = context?.params?.id;
+  if (!id || !ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "ID pengajuan tidak valid" }, { status: 400 });
+  }
   try {
-    await connectMongo();
-    const { id } = context.params;
-    if (!ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "ID pengajuan tidak valid" }, { status: 400 });
-    }
     const deleted = await DaftarPengajuan.findByIdAndDelete(id);
     if (!deleted) {
       return NextResponse.json({ error: "Pengajuan tidak ditemukan" }, { status: 404 });
