@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { Cpu, Home, CreditCard, Bell, User, LogOut, Menu, X, Wrench, ChevronDown, } from "lucide-react";
 
@@ -144,7 +145,7 @@ export default function SistemRatingPenyewa() {
                       <div className="text-slate-200 text-sm">{r.komentar}</div>
                     </div>
                   ))
-                )}
+                }
               </div>
             </div>
           </div>

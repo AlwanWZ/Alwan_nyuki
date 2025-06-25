@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { AdminNavbar } from "../navbar";
 import { Button } from "@/components/ui/button";
