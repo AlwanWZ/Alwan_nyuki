@@ -4,7 +4,7 @@ import DaftarPengajuan from "@/models/daftar_pengajuan";
 import { ObjectId } from "mongodb";
 
 // PATCH pengajuan (update status/alasan)
-export async function PATCH(req: NextRequest, context: { params: Record<string, string> }) {
+export async function PATCH(req: NextRequest, context: { params: { id: string } }) {
   try {
     await connectMongo();
     const { id } = context.params;
@@ -23,7 +23,7 @@ export async function PATCH(req: NextRequest, context: { params: Record<string, 
 }
 
 // DELETE pengajuan
-export async function DELETE(req: NextRequest, context: { params: Record<string, string> }) {
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
   try {
     await connectMongo();
     const { id } = context.params;
