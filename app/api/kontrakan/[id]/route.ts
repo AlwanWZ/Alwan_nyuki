@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import connectMongo from "@/lib/mongodb";
 import Kontrakan from "@/models/Kontrakan";
 
-export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, context: any) {
   try {
     await connectMongo();
-    const { id } = await context.params;
+    const id = context?.params?.id;
     const kontrakan = await Kontrakan.findById(id).lean();
     if (!kontrakan) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({ data: kontrakan });
@@ -15,12 +15,11 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
   }
 }
 
-export async function PATCH(req: Request, context: { params: Promise<{ id: string }> }) {
-  const params = await context.params;
+export async function PATCH(request: NextRequest, context: any) {
   try {
     await connectMongo();
-    const body = await req.json();
-    // Hanya update field yang dikirim di body
+    const id = context?.params?.id;
+    const body = await request.json();
     const updateFields: any = {};
     if (body.nama !== undefined) updateFields.nama = body.nama;
     if (body.alamat !== undefined) updateFields.alamat = body.alamat;
@@ -30,7 +29,7 @@ export async function PATCH(req: Request, context: { params: Promise<{ id: strin
     if (body.foto !== undefined) updateFields.foto = body.foto;
 
     const updated = await Kontrakan.findByIdAndUpdate(
-      params.id,
+      id,
       updateFields,
       { new: true }
     ).lean();
@@ -41,11 +40,11 @@ export async function PATCH(req: Request, context: { params: Promise<{ id: strin
   }
 }
 
-export async function DELETE(req: Request, context: { params: Promise<{ id: string }> }) {
-  const params = await context.params;
+export async function DELETE(request: NextRequest, context: any) {
   try {
     await connectMongo();
-    const deleted = await Kontrakan.findByIdAndDelete(params.id);
+    const id = context?.params?.id;
+    const deleted = await Kontrakan.findByIdAndDelete(id);
     if (!deleted) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({ success: true });
   } catch (error) {

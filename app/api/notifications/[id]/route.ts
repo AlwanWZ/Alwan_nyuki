@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Notification from "@/models/notifikasi";
 
-export async function DELETE(req: Request, context: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: NextRequest, context: any) {
   try {
     await connectDB();
-    const { id } = await context.params;
+    const id = context?.params?.id;
     const deleted = await Notification.findByIdAndDelete(id);
     if (!deleted) {
       return NextResponse.json({ error: "Notifikasi tidak ditemukan" }, { status: 404 });
